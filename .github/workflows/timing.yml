@@ -1,0 +1,37 @@
+# Research timing test of nnInteractive on CPU-only runners. Data and weights are fetched at run time, never stored.
+name: cpu-timing
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  click:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        side: [160, 128]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyTorch (CPU build)
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
+          else pip install torch==2.14.1; fi
+      - name: Install the rest
+        run: pip install nnInteractive==2.6.0 SimpleITK==2.5.6 pydicom==3.0.2 idc-index==0.13.4 numpy scipy psutil py-cpuinfo
+      - name: One click and two corrections
+        run: python timing.py ${{ matrix.side }} out
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timing-${{ matrix.os }}-${{ matrix.side }}
+          path: out/results.json
+          retention-days: 14
