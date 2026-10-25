@@ -1,6 +1,6 @@
 # nnInteractive CPU timing test
 
-A research timing test: how long one click of the nnInteractive 3D segmentation model takes on an ordinary x86 computer with no graphics card, and how much memory it needs. It runs on GitHub Actions runners (Windows and Ubuntu) with model windows of 160³ and 128³ voxels. Research use only; not for clinical use.
+A research timing test: how long one click of the nnInteractive 3D segmentation model takes on an ordinary x86 computer with no graphics card, and how much memory it needs. It runs on GitHub Actions runners (Windows and Ubuntu) with model windows of 128³, 160³ and 192³ voxels. Research use only; not for clinical use.
 
 - **What it does:** `timing.py` downloads one public CT scan and its reference outline, loads the model, places one click inside the tumour and two simulated corrections, and saves the timings, peak memory and overlap (Dice) to `results.json`.
 - **Data (public, downloaded at run time from NCI Imaging Data Commons, not stored here):**
